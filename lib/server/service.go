@@ -3,10 +3,15 @@ package server
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
+	"errors"
 	"io"
 	"net"
 	"word-of-wisdom-pos/lib/common"
+)
+
+var (
+	ErrInvalidSolution = errors.New("invalid solution")
+	ErrDiffChallenge   = errors.New("got different challenge")
 )
 
 type BookService struct {
@@ -44,12 +49,12 @@ func (b *BookService) checkConnection(con net.Conn) error {
 	nonce := binary.BigEndian.Uint64(buffer[:8])
 	challenge := buffer[8:]
 	if !bytes.Equal(originalChallenge[:8], challenge) {
-		return fmt.Errorf("got different challenge")
+		return ErrDiffChallenge
 	}
 	solution := common.NewSolution(challenge, nonce)
 	result := b.pow.CheckSolution(solution)
 	if !result {
-		return fmt.Errorf("invalid solution")
+		return ErrInvalidSolution
 	}
 	return nil
 }

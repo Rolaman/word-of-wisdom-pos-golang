@@ -9,6 +9,7 @@ import (
 func main() {
 	address := common.EnvVar("ADDRESS", "127.0.0.1:8001")
 	tcpClient := client.NewClient(address)
+	defer tcpClient.Close()
 	err := tcpClient.Connect()
 	if err != nil {
 		log.Fatalf("can't connect to server: %v", err)

@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  client:
+    image: golang:1.20
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: go run word-of-wisdom-pos/cmd/client
+    links:
+      - server
+    environment:
+      - ADDRESS=server:8001
+  server:
+    image: golang:1.20
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: go run word-of-wisdom-pos/cmd/server
+    environment:
+      - ADDRESS=0.0.0.0:8001

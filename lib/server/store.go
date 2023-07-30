@@ -1,8 +1,12 @@
 package server
 
 import (
-	"fmt"
+	"errors"
 	"math/rand"
+)
+
+var (
+	ErrEmptyQuotes = errors.New("store should have at least 1 quote")
 )
 
 type BookStore struct {
@@ -11,7 +15,7 @@ type BookStore struct {
 
 func NewStore(quotes []string) (*BookStore, error) {
 	if len(quotes) == 0 {
-		return nil, fmt.Errorf("store should have at least 1 quote")
+		return nil, ErrEmptyQuotes
 	}
 	return &BookStore{quotes: quotes}, nil
 }

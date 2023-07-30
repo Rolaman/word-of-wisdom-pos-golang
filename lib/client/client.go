@@ -2,6 +2,8 @@ package client
 
 import (
 	"encoding/binary"
+	"fmt"
+	"io/ioutil"
 	"log"
 	"net"
 	"time"
@@ -31,11 +33,11 @@ func (c *Client) Connect() error {
 	c.con = con
 	challenge, diff, err := c.readChallenge()
 	if err != nil {
-		return err
+		return fmt.Errorf("can't read challenge: %v", err)
 	}
 	solver, err := common.NewSolver(challenge, diff)
 	if err != nil {
-		return err
+		return fmt.Errorf("can't init solver: %v", err)
 	}
 	nonce, err := solver.FindNonce()
 	if err != nil {
@@ -43,17 +45,22 @@ func (c *Client) Connect() error {
 	}
 	err = c.sendSolution(challenge, nonce)
 	if err != nil {
-		return err
+		return fmt.Errorf("can't send solution: %v", err)
 	}
 	return nil
 }
 
 func (c *Client) FetchWords() (string, error) {
 	buf := make([]byte, 256)
-	if _, err := c.con.Read(buf); err != nil {
+	buf, err := ioutil.ReadAll(c.con)
+	if err != nil {
 		return "", err
 	}
 	return string(buf), nil
+}
+
+func (c *Client) Close() {
+	defer c.con.Close()
 }
 
 func (c *Client) readChallenge() ([]byte, byte, error) {
