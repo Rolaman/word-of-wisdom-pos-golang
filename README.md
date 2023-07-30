@@ -9,6 +9,10 @@
 - After Prof Of Work verification, server should send one of the quotes from “word of wisdom” book or any other collection of the quotes
 - Docker file should be provided both for the server and for the client that solves the POW challenge
 
+## Notes
+
+- Libraries like zerolog or zap can be used for nicer logging. Skipped because of testing task goals
+
 ## How to run
 
 Run server
