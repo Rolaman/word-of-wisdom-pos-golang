@@ -10,34 +10,34 @@ import (
 )
 
 type PowProvider struct {
-	difficulty uint8
+	difficulty byte
 }
 
 type PowSolution struct {
-	challenge []uint8
+	challenge []byte
 	nonce     uint64
 }
 
 type PowSolver struct {
-	challenge  []uint8
-	difficulty uint8
+	challenge  []byte
+	difficulty byte
 }
 
-func NewProvider(difficulty uint8) (*PowProvider, error) {
+func NewProvider(difficulty byte) (*PowProvider, error) {
 	if difficulty < 0 || difficulty > 8 {
 		return nil, fmt.Errorf("invalid difuculty: %v", difficulty)
 	}
 	return &PowProvider{difficulty: difficulty}, nil
 }
 
-func NewSolution(challenge []uint8, nonce uint64) PowSolution {
+func NewSolution(challenge []byte, nonce uint64) PowSolution {
 	return PowSolution{
 		challenge: challenge,
 		nonce:     nonce,
 	}
 }
 
-func NewSolver(challenge []uint8, difficulty uint8) (*PowSolver, error) {
+func NewSolver(challenge []byte, difficulty byte) (*PowSolver, error) {
 	if difficulty < 0 || difficulty > 8 {
 		return nil, fmt.Errorf("invalid difuculty: %v", difficulty)
 	}
@@ -52,6 +52,7 @@ func (p *PowProvider) GenerateChallenge() []byte {
 	millis := now.UnixMilli()
 	challengeBytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(challengeBytes, uint64(millis))
+	challengeBytes = append(challengeBytes, p.difficulty)
 	return challengeBytes
 }
 
@@ -69,7 +70,7 @@ func (s *PowSolver) FindNonce() (uint64, error) {
 	return 0, fmt.Errorf("can't find solution for challenge: %v with difficulty %v", s.challenge, s.difficulty)
 }
 
-func checkSolution(nonce uint64, challenge []uint8, difficulty uint8) bool {
+func checkSolution(nonce uint64, challenge []byte, difficulty byte) bool {
 	nonceBytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(nonceBytes, nonce)
 	vector := append(nonceBytes, challenge...)

@@ -43,7 +43,7 @@ func (b *BookService) checkConnection(con net.Conn) error {
 	}
 	nonce := binary.BigEndian.Uint64(buffer[:8])
 	challenge := buffer[8:]
-	if !bytes.Equal(originalChallenge, challenge) {
+	if !bytes.Equal(originalChallenge[:8], challenge) {
 		return fmt.Errorf("got different challenge")
 	}
 	solution := common.NewSolution(challenge, nonce)
