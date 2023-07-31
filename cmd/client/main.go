@@ -2,8 +2,8 @@ package main
 
 import (
 	"log"
-	"word-of-wisdom-pos/lib/client"
-	"word-of-wisdom-pos/lib/common"
+	"word-of-wisdom-pos/internal/client"
+	"word-of-wisdom-pos/internal/common"
 )
 
 func main() {

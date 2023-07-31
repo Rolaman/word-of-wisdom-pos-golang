@@ -6,7 +6,7 @@ import (
 	"errors"
 	"io"
 	"net"
-	"word-of-wisdom-pos/lib/common"
+	"word-of-wisdom-pos/internal/common"
 )
 
 var (

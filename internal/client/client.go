@@ -7,7 +7,7 @@ import (
 	"log"
 	"net"
 	"time"
-	"word-of-wisdom-pos/lib/common"
+	"word-of-wisdom-pos/internal/common"
 )
 
 type Client struct {
@@ -51,7 +51,6 @@ func (c *Client) Connect() error {
 }
 
 func (c *Client) FetchWords() (string, error) {
-	buf := make([]byte, 256)
 	buf, err := ioutil.ReadAll(c.con)
 	if err != nil {
 		return "", err
